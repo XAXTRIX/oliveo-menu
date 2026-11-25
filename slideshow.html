@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="nl">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Oliveo — Sinterklaas Menu</title>
+<link href="/fonts/Playfair Display/index.css" rel="stylesheet"/>
+<link href="/fonts/Nunito/index.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    :root {
+        --bg: #2D0A0A;
+        --bg2: #3D1010;
+        --primary: #C0392B;
+        --accent1: #D4AF37;
+        --accent2: #8B1A1A;
+        --ink: #FFF8F0;
+        --ink2: #F5D9A8;
+        --hfont: 'Playfair Display', serif;
+        --bfont: 'Nunito', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        background: #000;
+        overflow: hidden;
+        width: 1280px;
+        height: 720px;
+        font-family: var(--bfont);
+    }
+
+    .slideshow {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .slide {
+        position: absolute;
+        inset: 0;
+        width: 1280px;
+        height: 720px;
+        opacity: 0;
+        transition: opacity 1.2s ease-in-out;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .slide.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .bar-top {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #D4AF37, #C0392B, #D4AF37);
+        z-index: 30;
+    }
+
+    .bar-bottom {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #D4AF37, #C0392B, #D4AF37);
+        z-index: 30;
+    }
+
+    /* Progress dots */
+    .progress-wrap {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 40;
+    }
+
+    .dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: rgba(212,175,55,0.3);
+        border: 1px solid rgba(212,175,55,0.5);
+        transition: all 0.4s ease;
+    }
+
+    .dot.active {
+        background: #D4AF37;
+        box-shadow: 0 0 6px rgba(212,175,55,0.7);
+        transform: scale(1.2);
+    }
+
+    /* ══ SLIDE 1: COVER ══ */
+    #s1 .s1-bg {
+        position: absolute; inset: 0;
+        background-image: url('https://cdn.wallpapersafari.com/52/99/xdy48O.jpg');
+        background-size: cover; background-position: center;
+        z-index: 1;
+    }
+
+    #s1 .s1-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(160deg, rgba(15,3,3,0.72) 0%, rgba(20,4,4,0.60) 45%, rgba(20,4,4,0.88) 100%);
+        z-index: 2;
+    }
+
+    #s1 .s1-content {
+        position: relative; z-index: 10;
+        width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 13px; padding: 40px;
+    }
+
+    #s1 .s1-logo {
+        width: 96px; height: 96px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 20px rgba(212,175,55,0.65));
+    }
+
+    #s1 .s1-title {
+        font-family: var(--hfont);
+        font-size: 5rem; font-weight: 800;
+        color: var(--ink); letter-spacing: 0.12em;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.75);
+        text-align: center; line-height: 1;
+    }
+
+    #s1 .s1-title em { color: var(--accent1); font-style: normal; }
+
+    #s1 .s1-divider {
+        width: 300px; height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent1), transparent);
+    }
+
+    #s1 .s1-sub {
+        font-family: var(--bfont);
+        font-size: 1.1rem; color: var(--ink2);
+        letter-spacing: 0.22em; text-transform: uppercase; text-align: center;
+    }
+
+    #s1 .s1-tagline {
+        font-family: var(--hfont);
+        font-size: 1.35rem; color: var(--ink);
+        font-style: italic; text-align: center; opacity: 0.88;
+    }
+
+    #s1 .deco-stars {
+        position: absolute; color: var(--accent1);
+        opacity: 0.28; font-size: 0.9rem;
+        z-index: 10; pointer-events: none; line-height: 1.8;
+    }
+
+    #s1 .deco-stars.tl { top: 28px; left: 28px; }
+    #s1 .deco-stars.tr { top: 28px; right: 28px; text-align: right; }
+
+    /* ══ GRID SLIDES (2-7) ══ */
+    .grid-slide {
+        width: 100%; height: 100%;
+        background: var(--bg);
+        display: flex; flex-direction: column;
+        position: relative; z-index: 5;
+    }
+
+    /* Header bar */
+    .gs-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 36px 12px 36px;
+        background: var(--bg2);
+        border-bottom: 2px solid rgba(212,175,55,0.25);
+        flex-shrink: 0;
+    }
+
+    .gs-header-left {
+        display: flex; align-items: center; gap: 14px;
+    }
+
+    .gs-logo {
+        width: 48px; height: 48px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 8px rgba(212,175,55,0.5));
+    }
+
+    .gs-brand {
+        font-family: var(--hfont);
+        font-size: 1.5rem; font-weight: 800;
+        color: var(--accent1); letter-spacing: 0.08em;
+    }
+
+    .gs-title {
+        font-family: var(--hfont);
+        font-size: 1.9rem; font-weight: 800;
+        color: var(--ink);
+    }
+
+    .gs-title em { color: var(--accent1); font-style: normal; }
+
+    /* Product grid */
+    .gs-grid {
+        display: grid;
+        gap: 10px;
+        padding: 14px 28px 22px 28px;
+        flex: 1;
+        align-content: start;
+    }
+
+    /* 5 columns for frisdrank/snacks, 4 for others */
+    .cols-5 { grid-template-columns: repeat(5, 1fr); }
+    .cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .prod-card {
+        background: rgba(61,16,16,0.7);
+        border: 1px solid rgba(212,175,55,0.22);
+        border-radius: 10px;
+        padding: 10px 10px 8px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .prod-icon {
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--primary), var(--accent2));
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .prod-icon i { color: var(--accent1); font-size: 0.85rem; }
+
+    .prod-name {
+        font-family: var(--bfont);
+        font-size: 0.82rem; font-weight: 700;
+        color: var(--ink); text-align: center;
+        line-height: 1.2;
+    }
+
+    .prod-price {
+        font-family: var(--hfont);
+        font-size: 1.2rem; font-weight: 800;
+        color: #FFD700;
+        background: rgba(212,175,55,0.15);
+        border: 1px solid rgba(212,175,55,0.4);
+        border-radius: 6px;
+        padding: 2px 10px;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    }
+
+    /* Sinterklaas badge */
+    .gs-badge {
+        position: absolute;
+        bottom: 22px; right: 28px;
+        background: rgba(30,6,6,0.88);
+        border: 1px solid rgba(212,175,55,0.4);
+        border-radius: 20px;
+        padding: 5px 14px;
+        z-index: 20;
+        font-family: var(--bfont);
+        font-size: 0.75rem;
+        color: var(--ink2);
+        letter-spacing: 0.08em;
+    }
+</style>
+</head>
+<body>
+<div class="slideshow">
+<!-- ══ SLIDE 1: WELKOM ══ -->
+<div class="slide active" id="s1">
+<div class="s1-bg"></div>
+<div class="s1-overlay"></div>
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="deco-stars tl">
+<i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i><br/>
+<i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+</div>
+<div class="deco-stars tr">
+<i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i><br/>
+<i class="fas fa-star"></i> <i class="fas fa-star"></i> <i class="fas fa-star"></i>
+</div>
+<div class="s1-content">
+<img alt="Oliveo Logo" class="s1-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<div class="s1-title">OLIVE<em>O</em></div>
+<div class="s1-divider"></div>
+<div class="s1-sub">🎅 Sinterklaas Menu 2026 ⭐</div>
+<div class="s1-tagline">Welkom &amp; Geniet van het Sinterklaasfeest!</div>
+</div>
+</div>
+<!-- ══ SLIDE 2: FRISDRANKEN ══ -->
+<div class="slide" id="s2">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">🧊 <em>Koude</em> Drankjes</div>
+</div>
+<div class="gs-grid cols-5">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Bitter Lemon</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-lemon"></i></div><div class="prod-name">Capri-Sun Orange</div><div class="prod-price">€1.25</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-droplet"></i></div><div class="prod-name">Chaudfontaine</div><div class="prod-price">€2.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-mug-hot"></i></div><div class="prod-name">Chocomel</div><div class="prod-price">€2.25</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Coca-Cola</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Fanta</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Fanta Cassis</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Fristi</div><div class="prod-price">€2.25</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-leaf"></i></div><div class="prod-name">Fuze Tea</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-lemon"></i></div><div class="prod-name">Minute Maid</div><div class="prod-price">€2.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-droplet"></i></div><div class="prod-name">O2 Active</div><div class="prod-price">€3.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-bolt"></i></div><div class="prod-name">Powerade</div><div class="prod-price">€2.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-glass-water"></i></div><div class="prod-name">Sprite</div><div class="prod-price">€2.20</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- ══ SLIDE 3: WARME DRANKJES ══ -->
+<div class="slide" id="s3">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">☕ <em>Warme</em> Drankjes</div>
+</div>
+<div class="gs-grid cols-4">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-mug-hot"></i></div><div class="prod-name">Koffie</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-mug-saucer"></i></div><div class="prod-name">Koffie Speciaal</div><div class="prod-price">€2.40</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-leaf"></i></div><div class="prod-name">Thee</div><div class="prod-price">€1.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-heart"></i></div><div class="prod-name">Warme Chocomelk</div><div class="prod-price">€2.30</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- ══ SLIDE 4: ALCOHOL ══ -->
+<div class="slide" id="s4">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">🍺 <em>Alcohol</em></div>
+</div>
+<div class="gs-grid cols-5">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Corona 0.0%</div><div class="prod-price">€2.85</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Corona</div><div class="prod-price">€3.75</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-wine-bottle"></i></div><div class="prod-name">Rode Wijn Fles</div><div class="prod-price">€16.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-wine-glass"></i></div><div class="prod-name">Rode Wijn Glas</div><div class="prod-price">€2.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Hertog Jan 0.0%</div><div class="prod-price">€2.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Hertog Jan Pitcher</div><div class="prod-price">€15.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Hoegaarden 0.0%</div><div class="prod-price">€2.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Leffe 0.0%</div><div class="prod-price">€2.75</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Lowlander</div><div class="prod-price">€3.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Palm Fles</div><div class="prod-price">€3.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Speciaalbier Pitcher</div><div class="prod-price">€18.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-beer-mug-empty"></i></div><div class="prod-name">Speciaalbier Tap</div><div class="prod-price">€3.75</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-wine-glass"></i></div><div class="prod-name">Witte Wijn 250ml</div><div class="prod-price">€7.60</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- ══ SLIDE 5: ETEN ══ -->
+<div class="slide" id="s5">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">🍽️ <em>Eten</em></div>
+</div>
+<div class="gs-grid cols-3">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Braadworst</div><div class="prod-price">€3.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-bread-slice"></i></div><div class="prod-name">Broodje</div><div class="prod-price">€0.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-hotdog"></i></div><div class="prod-name">Broodje Braadworst</div><div class="prod-price">€4.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cheese"></i></div><div class="prod-name">Kaassoufle</div><div class="prod-price">€1.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Kroket</div><div class="prod-price">€2.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-pepper-hot"></i></div><div class="prod-name">Mexicano</div><div class="prod-price">€3.30</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- ══ SLIDE 6: SNACKS ══ -->
+<div class="slide" id="s6">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">🥨 <em>Snacks</em></div>
+</div>
+<div class="gs-grid cols-5">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-hotdog"></i></div><div class="prod-name">Br. Frikandel</div><div class="prod-price">€3.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cheese"></i></div><div class="prod-name">Br. Kaassoufle</div><div class="prod-price">€2.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Br. Kipcorn</div><div class="prod-price">€2.60</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Br. Kroket</div><div class="prod-price">€3.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-pepper-hot"></i></div><div class="prod-name">Br. Mexicano</div><div class="prod-price">€4.30</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-fire"></i></div><div class="prod-name">Friet</div><div class="prod-price">€2.75</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-hotdog"></i></div><div class="prod-name">Frikandel</div><div class="prod-price">€2.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cheese"></i></div><div class="prod-name">Kaassoufle</div><div class="prod-price">€2.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Kipcorn</div><div class="prod-price">€2.10</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-drumstick-bite"></i></div><div class="prod-name">Kroket</div><div class="prod-price">€2.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-pepper-hot"></i></div><div class="prod-name">Mexicano</div><div class="prod-price">€3.80</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-bread-slice"></i></div><div class="prod-name">Tosti</div><div class="prod-price">€3.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-bread-slice"></i></div><div class="prod-name">Vlam Tosti</div><div class="prod-price">€3.50</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- ══ SLIDE 7: TUSSENDOOR / SNOEP ══ -->
+<div class="slide" id="s7">
+<div class="bar-top"></div>
+<div class="bar-bottom"></div>
+<div class="grid-slide">
+<div class="gs-header">
+<div class="gs-header-left">
+<img alt="Oliveo" class="gs-logo" src="logo.png?expires=1798221454&amp;signature=d17cd45b6331a75525bc56c6980641c3a823b8e4aa40e6932cdd42835db310f7&amp;kid=prod-250922"/>
+<span class="gs-brand">Oliveo</span>
+</div>
+<div class="gs-title">🍬 <em>Snoep</em> &amp; Tussendoor</div>
+</div>
+<div class="gs-grid cols-5">
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cookie"></i></div><div class="prod-name">Lay's Chips</div><div class="prod-price">€1.65</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-ice-cream"></i></div><div class="prod-name">Dubbellikker</div><div class="prod-price">€1.00</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-ice-cream"></i></div><div class="prod-name">Festinie Peer</div><div class="prod-price">€1.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-candy-cane"></i></div><div class="prod-name">Haribo Kindermix</div><div class="prod-price">€1.65</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-circle"></i></div><div class="prod-name">M&amp;M's</div><div class="prod-price">€1.95</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-candy-cane"></i></div><div class="prod-name">Mars</div><div class="prod-price">€1.95</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cookie"></i></div><div class="prod-name">Popcorn Zoet/Zout</div><div class="prod-price">€1.60</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-ice-cream"></i></div><div class="prod-name">Raket IJsje</div><div class="prod-price">€1.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cookie"></i></div><div class="prod-name">Roze Koek</div><div class="prod-price">€1.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-candy-cane"></i></div><div class="prod-name">Snickers</div><div class="prod-price">€1.95</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-ice-cream"></i></div><div class="prod-name">Split IJsje</div><div class="prod-price">€1.50</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-cookie"></i></div><div class="prod-name">Stroopwafel</div><div class="prod-price">€1.20</div></div>
+<div class="prod-card"><div class="prod-icon"><i class="fas fa-candy-cane"></i></div><div class="prod-name">Twix</div><div class="prod-price">€1.95</div></div>
+</div>
+</div>
+<div class="gs-badge">🎅 Sinterklaas Menu 2026</div>
+</div>
+<!-- Progress dots (7 slides) -->
+<div class="progress-wrap">
+<div class="dot active" id="d0"></div>
+<div class="dot" id="d1"></div>
+<div class="dot" id="d2"></div>
+<div class="dot" id="d3"></div>
+<div class="dot" id="d4"></div>
+<div class="dot" id="d5"></div>
+<div class="dot" id="d6"></div>
+</div>
+</div>
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const dots   = document.querySelectorAll('.dot');
+    let cur = 0;
+
+    // ⏱ Weergavetijd per slide in milliseconden (9000 = 9 seconden)
+    const INTERVAL = 9000;
+
+    function goTo(n) {
+        slides[cur].classList.remove('active');
+        dots[cur].classList.remove('active');
+        cur = (n + slides.length) % slides.length;
+        slides[cur].classList.add('active');
+        dots[cur].classList.add('active');
+    }
+
+    let timer = setInterval(() => goTo(cur + 1), INTERVAL);
+
+    document.querySelector('.slideshow').addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(cur + 1);
+        timer = setInterval(() => goTo(cur + 1), INTERVAL);
+    });
+</script>
+</body>
+</html>
